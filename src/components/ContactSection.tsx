@@ -6,6 +6,7 @@ import {
   Phone,
   Mail,
   Check,
+  Copy,
   X,
   Sparkles,
   ArrowRight,
@@ -25,12 +26,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 }) => {
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
-
-  // Form state
-  const [name, setName] = useState('');
-  const [contact, setContact] = useState('');
-  const [taskDescription, setTaskDescription] = useState(initialSummaryText);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [copiedSummaryText, setCopiedSummaryText] = useState(false);
 
   const handleCopyPhone = () => {
     navigator.clipboard.writeText(CONTACT_INFO.phone);
@@ -44,9 +40,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmitForm = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
+  const handleCopyModalSummary = () => {
+    if (!initialSummaryText) return;
+    navigator.clipboard.writeText(initialSummaryText);
+    setCopiedSummaryText(true);
+    setTimeout(() => setCopiedSummaryText(false), 2000);
   };
 
   return (
@@ -240,14 +238,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
       </div>
 
-      {/* Optional Quick Consultation Dialog */}
+      {/* Task Summary & Direct Telegram Dialog */}
       {isConsultationModalOpen && onCloseConsultationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-lg bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-2xl"
+            className="relative w-full max-w-xl bg-white border border-slate-200 rounded-3xl p-5 sm:p-7 shadow-2xl"
           >
             <button
               onClick={onCloseConsultationModal}
@@ -256,88 +254,44 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               <X className="w-5 h-5" />
             </button>
 
-            {!formSubmitted ? (
-              <form onSubmit={handleSubmitForm} className="space-y-3.5">
-                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-violet-600 uppercase tracking-wider">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Экспресс-разбор задачи</span>
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
-                  Оставить запрос на обсуждение
-                </h3>
-
-                <p className="text-xs sm:text-sm text-slate-600 font-normal">
-                  Укажите удобный контакт — свяжемся для короткого разбора без спама и назойливых продаж.
-                </p>
-
-                <div>
-                  <label className="block text-xs sm:text-sm font-bold text-slate-700 mb-1">
-                    Ваше имя или должность
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Алексей, Руководитель отдела"
-                    className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 font-normal"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs sm:text-sm font-bold text-slate-700 mb-1">
-                    Телефон или Telegram для связи
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                    placeholder="+7 921 773 2273 или @prontoKSV"
-                    className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 font-normal"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs sm:text-sm font-bold text-slate-700 mb-1">
-                    Краткое описание задачи или результаты теста
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={taskDescription}
-                    onChange={(e) => setTaskDescription(e.target.value)}
-                    placeholder="Опишите, что нужно решить..."
-                    className="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 font-mono"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3 px-5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 hover:from-violet-500 hover:to-sky-500 rounded-xl shadow-md transition-all mt-2 cursor-pointer"
-                >
-                  Отправить заявку
-                </button>
-              </form>
-            ) : (
-              <div className="text-center py-5">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
-                  <Check className="w-6 h-6 stroke-[3]" />
-                </div>
-                <h4 className="text-lg sm:text-xl font-bold text-slate-900">
-                  Заявка принята!
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-600 mt-2 font-normal">
-                  Спасибо! Мы изучим ваше описание и свяжемся с вами.
-                </p>
-                <button
-                  onClick={onCloseConsultationModal}
-                  className="mt-5 px-6 py-2.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
-                >
-                  Закрыть окно
-                </button>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-violet-600 uppercase tracking-wider">
+                <Sparkles className="w-4 h-4" />
+                <span>Готовое резюме задачи</span>
               </div>
-            )}
+
+              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                Обсуждение задачи с экспертом
+              </h3>
+
+              <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+                Скопируйте подготовленное экспертное заключение и отправьте его в Telegram для прямого обсуждения.
+              </p>
+
+              <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl max-h-56 overflow-y-auto text-xs sm:text-sm text-slate-800 font-mono whitespace-pre-wrap leading-relaxed shadow-inner">
+                {initialSummaryText || 'Резюме задачи сформировано.'}
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  onClick={handleCopyModalSummary}
+                  className="w-full sm:w-1/2 py-3 px-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {copiedSummaryText ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-600" />}
+                  <span>{copiedSummaryText ? 'Скопировано!' : 'Скопировать результат'}</span>
+                </button>
+
+                <a
+                  href={CONTACT_INFO.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-1/2 py-3 px-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 hover:from-violet-500 hover:to-sky-500 rounded-xl shadow-md hover:shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Написать в Telegram</span>
+                </a>
+              </div>
+            </div>
           </motion.div>
         </div>
       )}
