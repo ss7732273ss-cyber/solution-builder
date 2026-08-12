@@ -1,0 +1,8 @@
+{
+  "name": "Конструктор решений 1.0",
+  "description": "Интерактивный лендинг и сервис подбора практических решений для рабочих задач и процессов без лишней сложности.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
