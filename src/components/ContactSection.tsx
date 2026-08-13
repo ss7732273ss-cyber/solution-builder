@@ -118,7 +118,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   title="Открыть в Telegram"
                 >
                   <img
-                    src="/telegram-qr.svg"
+                    src="./telegram-qr.svg"
                     alt="Telegram QR @prontoKSV"
                     className="w-9 h-9 object-contain"
                   />
