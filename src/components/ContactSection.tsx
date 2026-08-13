@@ -73,7 +73,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             <div className="relative shrink-0">
               <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full p-1 bg-gradient-to-tr from-violet-500 to-sky-400 shadow-md">
                 <img
-                  src="/120826.jpg"
+                  src="./120826.jpg"
                   alt="Эксперт проекта Конструктор решений"
                   className="w-full h-full object-cover rounded-full"
                 />
